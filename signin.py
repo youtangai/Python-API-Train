@@ -24,13 +24,7 @@ def signin():
     json = request.get_json()
     userid = json['userid']
     password = json['password']
-    result = {
-        "data": {
-            "userid" : userid,
-            "password" : password 
-        }
-    }
-    print(result)
+    
     if userid != USERID and password != PASSWORD:
         return jsonify({'message':'faild login'})
     

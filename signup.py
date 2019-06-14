@@ -1,9 +1,8 @@
 from flask import jsonify, Flask, url_for, request, Response, make_response
 import secrets
 import db_operation
+from http import HTTPStatus
 
-db_operation.init_db()
-db_operation.add_userid_and_password(userid='cloud-fun', password='cloud-fun')
 app = Flask(__name__)
 
 
@@ -14,7 +13,7 @@ def index():
 
 @app.route('/ping', methods=['GET'])
 def pong():
-    return jsonify({'message': "pong"})
+    return jsonify({'message': "pong"}), HTTPStatus.OK
 
 
 @app.route('/signin', methods=['POST'])
@@ -26,16 +25,16 @@ def signin():
         userid=input_userid, password=input_password)
     # 登録されていないユーザの処理
     if get_uid_pw == -1:
-        return jsonify({'message': 'Not found user ID'})
+        return jsonify({'message': 'Not found user ID'}), HTTPStatus.OK
 
     userid = get_uid_pw.userid
     password = get_uid_pw.password
 
     if input_userid != userid and input_password != password:
-        return jsonify({'message': 'faild login'})
+        return jsonify({'message': 'faild login'}), HTTPStatus.OK
 
     token = 'hoge'+secrets.token_hex()
-    return jsonify({'access_token': token})
+    return jsonify({'access_token': token}), HTTPStatus.OK
 
 
 @app.route('/signup', methods=['POST'])
@@ -47,8 +46,14 @@ def signup():
         userid=input_userid, password=input_password)
 
     token = 'hoge'+secrets.token_hex()
-    return jsonify({'access_token': token}), 404 
+    return jsonify({'access_token': token}), HTTPStatus.CREATED
 
 
 if __name__ == "__main__":
+    db_operation.init_db()
+    db_operation.add_userid_and_password(
+        userid='cloud-fun', password='cloud-fun')
     app.run(debug=True)
+
+# status code を変数化
+# requarement.txt 作って

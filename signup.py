@@ -2,6 +2,7 @@ from flask import jsonify, Flask, request
 import secrets
 import db_operation
 from http import HTTPStatus
+import encryption
 
 app = Flask(__name__)
 
@@ -21,8 +22,9 @@ def signin():
     json = request.get_json()
     input_userid = json['userid']
     input_password = json['password']
+    encryption_password = encryption.encryption_password(userid=input_userid, password=input_password)
     get_uid_pw = db_operation.select_userid_and_password(
-        userid=input_userid, password=input_password)
+        userid=input_userid, password=encryption_password)
     # 登録されていないユーザの処理
     if get_uid_pw == -1:
         return jsonify({'message': 'Not found user ID'}), HTTPStatus.OK
@@ -42,8 +44,10 @@ def signup():
     json = request.get_json()
     input_userid = json['userid']
     input_password = json['password']
+
+    encrypted_password = encryption.encryption_password(input_userid, input_password) 
     db_operation.add_userid_and_password(
-        userid=input_userid, password=input_password)
+        userid=input_userid, password=encrypted_password)
 
     token = 'hoge'+secrets.token_hex()
     return jsonify({'access_token': token}), HTTPStatus.CREATED

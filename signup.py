@@ -56,7 +56,7 @@ def signup():
 if __name__ == "__main__":
     db_operation.init_db()
     db_operation.add_userid_and_password(
-        userid='cloud-fun', password='cloud-fun')
+        userid='cloud-fun', password=encryption.encryption_password('cloud-fun', 'cloud-fun'))
     app.run(debug=True)
 
 # status code を変数化

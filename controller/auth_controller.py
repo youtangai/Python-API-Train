@@ -43,8 +43,8 @@ class AuthController(AuthControllerInterface):
         # password = get_uid_pw.password
 
         # 受け取った物とDBにあるものを比較
-        if req_userid != "userid" and req_password != "password":
-            return jsonify({'message': 'faild login'}), HTTPStatus.OK
+        if req_userid != USERID and req_password != PASSWORD:
+            return jsonify({'message': 'faild login'}), HTTPStatus.BAD_REQUEST
         # トークンを発行
         token = 'hoge'+secrets.token_hex()
         return jsonify({'access_token': token}), HTTPStatus.OK

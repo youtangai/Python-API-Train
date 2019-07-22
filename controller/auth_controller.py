@@ -2,14 +2,13 @@ from abc import ABCMeta, abstractmethod
 from injector import Injector, inject
 from flask import jsonify, Flask, url_for, request, Response, make_response
 import secrets
-from model import encrypter
+from model.encrypter import EncrypterInterface, Encrypter
 import logging
 from http import HTTPStatus
 
 # userid と passwordは固定
 USERID = 'cloud-fun'
 PASSWORD = 'cloud-fun'
-
 
 class AuthControllerInterface(metaclass=ABCMeta):
     @abstractmethod
@@ -19,20 +18,14 @@ class AuthControllerInterface(metaclass=ABCMeta):
     def sign_up(self):
         pass
 
-class ImplACI(AuthControllerInterface):
-    def sign_in(self):
-        print("signin")
-    def sign_up(self):
-        print("signup")
-
-class AuthController():
+class AuthController(AuthControllerInterface):
     @inject
-    def __init__(self, auth_i: AuthControllerInterface, enc_i: encrypter.EncrypterInterface):
-        if not isinstance(auth_i, AuthControllerInterface):
-            raise Exception("i is not Interface of Ping")
-        self.encrypterManager = enc_i
-
-    def signin(self):
+    def __init__(self, enc_i: EncrypterInterface):
+        if not isinstance(enc_i, EncrypterInterface):
+            raise Exception("enc_i is not Interface of Encrypter")
+        self.encManager = enc_i
+    
+    def sign_in(self):
         # Convert Json Object
         json = request.get_json()
         req_userid = json['user_id']
@@ -40,7 +33,7 @@ class AuthController():
         logging.info('[INFO]: user_id' + req_userid)
         logging.info('[INFO]: user_password' + req_password)
         # 
-        hashed_password = self.encrypterManager.hashed_password(req_password)
+        hashed_password = self.encManager.hashed_password(req_password)
         #get_uid_pw = db_operation.select_userid_and_password(userid=input_userid, password=encryption_password)
         # 登録されていないユーザの処理
         # if get_uid_pw == -1:
@@ -55,3 +48,6 @@ class AuthController():
         # トークンを発行
         token = 'hoge'+secrets.token_hex()
         return jsonify({'access_token': token}), HTTPStatus.OK
+
+    def sign_up(self):
+        print("signup")

@@ -15,6 +15,7 @@ class AuthControllerInterface(metaclass=ABCMeta):
     def sign_in(self):
         pass
 
+    @abstractmethod
     def sign_up(self):
         pass
 

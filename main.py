@@ -1,7 +1,7 @@
 from flask import jsonify, Flask
 from controller.ping_controller import PingController
-from controller.auth_controller import AuthController, ImplACI
-from model.encrypter import ImplEI
+from controller.auth_controller import AuthController
+from model.encrypter import Encrypter
 
 app = Flask(__name__)
 
@@ -12,10 +12,9 @@ def ping():
 
 @app.route('/signin', methods=["POST"])
 def signin():
-    aci = ImplACI()
-    ei = ImplEI()
-    ac = AuthController(aci, ei)
-    return ac.signin()
+    enc = Encrypter()
+    ac = AuthController(enc)
+    return ac.sign_in()
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')

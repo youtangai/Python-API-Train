@@ -1,5 +1,5 @@
 from flask import jsonify, Flask
-from controller.ping_controller import PingController, ImplPCI
+from controller.ping_controller import PingController
 from controller.auth_controller import AuthController, ImplACI
 from model.encrypter import ImplEI
 
@@ -7,9 +7,8 @@ app = Flask(__name__)
 
 @app.route('/ping', methods=["GET"])
 def ping():
-    pci = ImplPCI()
-    pc = PingController(pci)
-    return pc.pong()
+    ctrl = PingController()
+    return ctrl.pong()
 
 @app.route('/signin', methods=["POST"])
 def signin():

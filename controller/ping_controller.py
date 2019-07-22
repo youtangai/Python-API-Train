@@ -7,17 +7,7 @@ class PingControllerInterface(metaclass=ABCMeta):
     def pong(self):
         pass
 
-class ImplPCI(PingControllerInterface):
+class PingController(PingControllerInterface):
     def pong(self):
         result = jsonify({'message':'pong'})
         return result
-
-class PingController():
-    @inject
-    def __init__(self, i: PingControllerInterface):
-        if not isinstance(i, PingControllerInterface):
-            raise Exception("i is not Interface of Ping")
-        self.pci = i
-    
-    def pong(self):
-        return self.pci.pong()

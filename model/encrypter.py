@@ -15,25 +15,12 @@ class EncrypterInterface(metaclass=ABCMeta):
     def check_hashed(self, hashed: str, password: str) -> bool:
         pass
 
-class ImplEI(EncrypterInterface):
-    def hashed_password(self, passwd: str) -> str:
-        return "hoge"
-    def check_hashed(self, hashed: str, password: str) -> bool:
-        return True
-
-# 実際に暗号化を行う本体
-# コンストラクタで，インターフェースをインジェクション
-class Encrypter():
-    @inject
-    def __init__(self, i: EncrypterInterface):
-        if not isinstance(i, EncrypterInterface):
-            raise Exception("i is not Interface of Encrypter")
-    
+class Encrypter(EncrypterInterface):
     def hashed_password(self, password: str) -> str:
         bin_password = password.encode()
         hashed_pass = hashlib.sha256(bin_password).hexdigest() 
         return hashed_pass
-    
+
     def check_hashed(self, hashed: str, password: str) -> bool:
         bin_password = password.encode()
         hashed_pass = hashlib.sha256(bin_password).hexdigest() 

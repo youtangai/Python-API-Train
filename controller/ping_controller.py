@@ -7,6 +7,10 @@ class PingControllerInterface(metaclass=ABCMeta):
     def pong(self):
         pass
 
+class ImplPCI(PingControllerInterface):
+    def pong(self):
+        print("hoge")
+
 class PingController():
     @inject
     def __init__(self, i: PingControllerInterface):

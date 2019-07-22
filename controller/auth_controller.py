@@ -2,7 +2,7 @@ from abc import ABCMeta, abstractmethod
 from injector import Injector, inject
 from flask import jsonify, Flask, url_for, request, Response, make_response
 import secrets
-from ..model import encrypter
+from model import encrypter
 import logging
 from http import HTTPStatus
 
@@ -19,6 +19,11 @@ class AuthControllerInterface(metaclass=ABCMeta):
     def sign_up(self):
         pass
 
+class ImplACI(AuthControllerInterface):
+    def sign_in(self):
+        print("signin")
+    def sign_up(self):
+        print("signup")
 
 class AuthController():
     @inject

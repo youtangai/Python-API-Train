@@ -15,6 +15,12 @@ class EncrypterInterface(metaclass=ABCMeta):
     def check_hashed(self, hashed: str, password: str) -> bool:
         pass
 
+class ImplEI(EncrypterInterface):
+    def hashed_password(self, passwd: str) -> str:
+        return "hoge"
+    def check_hashed(self, hashed: str, password: str) -> bool:
+        return True
+
 # 実際に暗号化を行う本体
 # コンストラクタで，インターフェースをインジェクション
 class Encrypter():

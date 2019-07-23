@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
-from injector import Injector, inject
-from flask import jsonify, Flask, url_for, request, Response, make_response
+from injector import inject, Module
+from flask import jsonify, request
 import secrets
 from model.encrypter import EncrypterInterface, Encrypter
 import logging
@@ -52,3 +52,7 @@ class AuthController(AuthControllerInterface):
 
     def sign_up(self):
         print("signup")
+
+class AuthControllerDIModule(Module):
+    def configure(self, binder):
+        binder.bind(EncrypterInterface, to=Encrypter)

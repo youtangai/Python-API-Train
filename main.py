@@ -1,7 +1,8 @@
 from flask import jsonify, Flask
 from controller.ping_controller import PingController
-from controller.auth_controller import AuthController
+from controller.auth_controller import AuthController, AuthControllerDIModule
 from model.encrypter import Encrypter
+from injector import Injector
 
 app = Flask(__name__)
 
@@ -12,8 +13,8 @@ def ping():
 
 @app.route('/signin', methods=["POST"])
 def signin():
-    enc = Encrypter()
-    ac = AuthController(enc)
+    injector = Injector([AuthControllerDIModule()])
+    ac = injector.get(AuthController)
     return ac.sign_in()
 
 if __name__ == "__main__":

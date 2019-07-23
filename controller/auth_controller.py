@@ -3,12 +3,9 @@ from injector import inject, Module
 from flask import jsonify, request
 import secrets
 from model.encrypter import EncrypterInterface, Encrypter
+from model.user import UserRepositoryInterface, UserRepository
 import logging
 from http import HTTPStatus
-
-# userid と passwordは固定
-USERID = 'cloud-fun'
-PASSWORD = 'cloud-fun'
 
 class AuthControllerInterface(metaclass=ABCMeta):
     @abstractmethod
@@ -21,10 +18,13 @@ class AuthControllerInterface(metaclass=ABCMeta):
 
 class AuthController(AuthControllerInterface):
     @inject
-    def __init__(self, enc_i: EncrypterInterface):
+    def __init__(self, enc_i: EncrypterInterface, repo_i: UserRepositoryInterface):
         if not isinstance(enc_i, EncrypterInterface):
             raise Exception("enc_i is not Interface of Encrypter")
+        if not isinstance(repo_i, UserRepositoryInterface):
+            raise Exception("repo_i is not Interface of UserRepository")
         self.encManager = enc_i
+        self.repo = repo_i
     
     def sign_in(self):
         # Convert Json Object
@@ -33,26 +33,31 @@ class AuthController(AuthControllerInterface):
         req_password = json['password']
         logging.info('[INFO]: user_id' + req_userid)
         logging.info('[INFO]: user_password' + req_password)
-        # 
-        hashed_password = self.encManager.hashed_password(req_password)
-        #get_uid_pw = db_operation.select_userid_and_password(userid=input_userid, password=encryption_password)
-        # 登録されていないユーザの処理
-        # if get_uid_pw == -1:
-        #     return jsonify({'message': 'Not found user ID'}), HTTPStatus.OK
 
-        # userid = get_uid_pw.userid
-        # password = get_uid_pw.password
+        # ハッシュ化 
+        hashed_password = self.encManager.hashed_password(req_password)
+        # dbからハッシュ化されたパスワードを取得
+        registered_hashed_password = self.repo.get_passwd(user_id=req_userid)
 
         # 受け取った物とDBにあるものを比較
-        if req_userid != USERID and req_password != PASSWORD:
+        if hashed_password != registered_hashed_password:
             return jsonify({'message': 'faild login'}), HTTPStatus.BAD_REQUEST
         # トークンを発行
         token = 'hoge'+secrets.token_hex()
         return jsonify({'access_token': token}), HTTPStatus.OK
 
     def sign_up(self):
-        print("signup")
+        json = request.get_json()
+        user_id = json['user_id']
+        password = json['password']
+
+        hashed = self.encManager.hashed_password(password)
+        print(hashed)
+        self.repo.insert(user_id=user_id, passwd=hashed)
+
+        return jsonify({'message':'created user'}), HTTPStatus.CREATED
 
 class AuthControllerDIModule(Module):
     def configure(self, binder):
         binder.bind(EncrypterInterface, to=Encrypter)
+        binder.bind(UserRepositoryInterface, to=UserRepository)

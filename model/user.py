@@ -32,6 +32,9 @@ class UserRepository(UserRepositoryInterface):
             cursor.execute("insert into account values (%s, %s);", (user_id, passwd))
         except mysql.connector.Error as err:
             print("failed to insert data to account: {}".format(err))
+            raise err
+        cursor.close()
+        self.ctx.commit()
     
     def get_passwd(self, user_id):
         cursor = self.ctx.cursor()
@@ -39,5 +42,7 @@ class UserRepository(UserRepositoryInterface):
             cursor.execute("select * from account where account.user_id = %s;", (user_id,))
         except mysql.connector.Error as err:
             print("failed to select data from account: {}".format(err))
+            raise err
         rows = cursor.fetchall()
+        cursor.close()
         return rows[0][1]

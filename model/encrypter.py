@@ -8,11 +8,19 @@ from injector import Injector, inject
 class EncrypterInterface(metaclass=ABCMeta):
     # パスワードハッシュ化用のメソッド
     @abstractmethod
-    def hashed_password(self, password: str) -> str:
+    def hashed_password(self, password):
+        """
+        @param: str
+        @return: str
+        """
         pass
     # ハッシュ化された文字列と対象が等価か評価するメソッド
     @abstractmethod
-    def check_hashed(self, hashed: str, password: str) -> bool:
+    def check_hashed(self, hashed, password):
+        """
+        @param: str, str
+        @return: bool
+        """
         pass
 
 # 実際に暗号化を行う本体
@@ -22,13 +30,38 @@ class Encrypter():
     def __init__(self, i: EncrypterInterface):
         if not isinstance(i, EncrypterInterface):
             raise Exception("i is not Interface of Encrypter")
+        self.enc_i = i
     
-    def hashed_password(self, password: str) -> str:
+    def hashed_password(self, password):
+        """
+        @param: str
+        @return: str
+        """
         bin_password = password.encode()
         hashed_pass = hashlib.sha256(bin_password).hexdigest() 
-        return hashed_pass
+        return self.enc_i.hashed_password(password)
     
-    def check_hashed(self, hashed: str, password: str) -> bool:
+    def check_hashed(self, hashed, password):
+        """
+        @param: str, str
+        @return: bool
+        """
+        return self.enc_i.check_hashed(hashed, password)
+
+class EncrypterForSha256(EncrypterInterface):
+    def hashed_password(self, password):
+        """
+        @param: str
+        @return str
+        """
+        bin_password = password.encode()
+        hashed_pass = hashlib.sha256(bin_password).hexdigest()
+        return hashed_pass
+    def check_hashed(self, hashed, password):
+        """
+        @param: str, str
+        @return: bool
+        """
         bin_password = password.encode()
         hashed_pass = hashlib.sha256(bin_password).hexdigest() 
         if hashed == hashed_pass: return True

@@ -1,7 +1,7 @@
 # conding: utf-8
 import hashlib
 from abc import ABCMeta, abstractmethod
-from injector import Injector, inject
+from injector import inject
 
 # インターフェースを定義(なぜインターフェースを定義しているかは考えてみて)
 # インターフェースは，引数と返り値だけ持つ抽象クラス

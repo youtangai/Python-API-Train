@@ -1,5 +1,4 @@
 from abc import ABCMeta, abstractmethod
-from injector import Injector, inject
 from flask import jsonify
 
 class PingControllerInterface(metaclass=ABCMeta):

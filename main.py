@@ -1,4 +1,4 @@
-from flask import jsonify, Flask
+from flask import Flask
 from controller.ping_controller import PingController
 from controller.auth_controller import AuthController, AuthControllerDIModule
 from model.encrypter import Encrypter

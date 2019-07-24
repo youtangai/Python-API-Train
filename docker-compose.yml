@@ -2,14 +2,21 @@ version: '3.3'
 services:
   api:
     build: .
+    environment:
+      DB_HOST: db
+      DB_NAME: cloudfun
+      DB_USER: cloud
+      DB_PASS: fun
     ports:
       - "5000:5000"
   db:
     image: mysql:5.7
     environment:
-      MYSQL_DATABASE: cloud
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: cloudfun
+      MYSQL_USER: cloud
+      MYSQL_PASSWORD: fun
       MYSQL_ROOT_PASSWORD: cloudfun
     ports:
       - "3306:3306"
+    volumes:
+      ./database:/docker-entrypoint-initdb.d

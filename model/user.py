@@ -15,6 +15,7 @@ class UserRepository(UserRepositoryInterface):
     def __init__(self):
         env = Env()
         try:
+            # 環境変数から値を取得
             self.ctx = mysql.connector.connect(
                 host=env.get_host(),
                 port=env.get_port(),
@@ -24,6 +25,7 @@ class UserRepository(UserRepositoryInterface):
             )
         except mysql.connector.Error as err:
             raise err
+        # 不要なインスタンスなので削除
         del env
         
     def __del__(self):
@@ -36,6 +38,7 @@ class UserRepository(UserRepositoryInterface):
         except mysql.connector.Error as err:
             print("failed to insert data to account: {}".format(err))
             raise err
+        # 一連の処理が終了したので，カーソルをとして結果をコミット
         cursor.close()
         self.ctx.commit()
     
@@ -46,6 +49,8 @@ class UserRepository(UserRepositoryInterface):
         except mysql.connector.Error as err:
             print("failed to select data from account: {}".format(err))
             raise err
-        rows = cursor.fetchall()
+        # fetchoneで最初の1つめのレコードを取得
+        rows = cursor.fetchone()
         cursor.close()
-        return rows[0][1]
+        # (user_id, passwd) というタプルが手に入るため，passwdを取り出す
+        return rows[1]

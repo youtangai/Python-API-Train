@@ -29,6 +29,8 @@ class UserRepository(UserRepositoryInterface):
         del env
         
     def __del__(self):
+        # デストラクタでコネクションを削除するようにする
+        # (これ必要なのか正直わからない by youtangai)
         self.ctx.close()
 
     def insert(self, user_id, passwd):

@@ -57,6 +57,7 @@ class AuthController(AuthControllerInterface):
 
         return jsonify({'message':'created user'}), HTTPStatus.CREATED
 
+# DI用のモジュールを定義
 class AuthControllerDIModule(Module):
     def configure(self, binder):
         binder.bind(EncrypterInterface, to=Encrypter)

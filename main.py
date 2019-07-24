@@ -1,7 +1,6 @@
 from flask import Flask
 from controller.ping_controller import PingController
 from controller.auth_controller import AuthController, AuthControllerDIModule
-from model.encrypter import Encrypter
 from injector import Injector
 
 app = Flask(__name__)

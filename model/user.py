@@ -1,5 +1,6 @@
 import mysql.connector
 from abc import ABCMeta, abstractmethod
+from config.env import Env
 
 class UserRepositoryInterface(metaclass=ABCMeta): 
     @abstractmethod
@@ -12,16 +13,18 @@ class UserRepositoryInterface(metaclass=ABCMeta):
 
 class UserRepository(UserRepositoryInterface):
     def __init__(self):
+        env = Env()
         try:
             self.ctx = mysql.connector.connect(
-                host='172.17.0.2',
-                port='3306',
-                user='root',
-                password='pass',
-                database='cloudfun'
+                host=env.get_host(),
+                port=env.get_port(),
+                user=env.get_user(),
+                password=env.get_pass(),
+                database=env.get_name()
             )
         except mysql.connector.Error as err:
             raise err
+        del env
         
     def __del__(self):
         self.ctx.close()

@@ -9,6 +9,8 @@ services:
       DB_PASS: fun
     ports:
       - "5000:5000"
+    volumes:
+      - uwsgi-sock:/tmp
   db:
     image: mysql:5.7
     environment:
@@ -20,3 +22,7 @@ services:
       - "3306:3306"
     volumes:
       - ./database:/docker-entrypoint-initdb.d
+
+volumes:
+  uwsgi-sock:
+    driver: local

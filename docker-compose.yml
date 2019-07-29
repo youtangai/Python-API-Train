@@ -19,7 +19,7 @@ services:
       MYSQL_DATABASE: cloudfun
       MYSQL_USER: cloud
       MYSQL_PASSWORD: fun
-      MYSQL_ROOT_PASSWORD: cloudfun
+      MYSQL_ROOT_PASSWORD: pass
     ports:
       - "3306:3306"
     volumes:

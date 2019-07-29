@@ -13,14 +13,16 @@ FLASK_DEBUG=1 python main.py
 ```
 # まずデータベース起動
 docker-compose up -d db
-# apiサーバを起動
-docker-compose up -d api
+# uwsgiでアプリケーションサーバ起動
+docker-compose up -d uwsgi
+# Webサーバ起動
+docker-compose up -d web
 ```
 ### 動作確認 
 ``` 
-curl http://localhost:5000/ping
+curl http://127.0.0.1/ping
 
-curl -X POST -H "Content-Type: application/json" -d '{"user_id":"[user_id]", "password":"[password]"}' http://127.0.0.1:5000/signup
+curl -X POST -H "Content-Type: application/json" -d '{"user_id":"[user_id]", "password":"[password]"}' http://127.0.0.1/signup
 
-curl -X POST -H "Content-Type: application/json" -d '{"user_id":"[userid]", "password":"[password]"}' http://127.0.0.1:5000/signin
+curl -X POST -H "Content-Type: application/json" -d '{"user_id":"[userid]", "password":"[password]"}' http://127.0.0.1/signin
 ```

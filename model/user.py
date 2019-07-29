@@ -21,7 +21,8 @@ class UserRepository(UserRepositoryInterface):
                 port=env.get_port(),
                 user=env.get_user(),
                 password=env.get_pass(),
-                database=env.get_name()
+                database=env.get_name(),
+                ssl_disabled=True # uwsgiで起動した場合，デフォルトでfalseになり接続に失敗するためTrueを指定
             )
         except mysql.connector.Error as err:
             raise err

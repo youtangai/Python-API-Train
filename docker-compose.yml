@@ -1,17 +1,26 @@
 version: '3.3'
 services:
-  db:
-    build: ./docker/mysql
-    image: mysql:5.7
-    restart: always
-    environment:
-      MYSQL_DATABASE: account_db
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
-      MYSQL_ROOT_PASSWORD: password
+  web:
+    image: nginx:1.16.0-alpine
     ports:
-      - "3314:3306"
+      - "80:80"
     volumes:
-      - ./docker/mysql/initdb.d:/docker-entrypoint-initdb.d
-      - ./docker/mysql/conf.d:/etc/mysql/conf.d
-      - ./log/mysql:/var/log/mysql
+      - ./nginx:/etc/nginx/conf.d
+  uwsgi:
+    build: .
+    environment:
+      DB_HOST: db
+      DB_NAME: cloudfun
+      DB_USER: cloud
+      DB_PASS: fun
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: cloudfun
+      MYSQL_USER: cloud
+      MYSQL_PASSWORD: fun
+      MYSQL_ROOT_PASSWORD: cloudfun
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./database:/docker-entrypoint-initdb.d

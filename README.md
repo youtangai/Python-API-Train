@@ -1,14 +1,8 @@
 # Python-API-Train
 ## 使い方  
 ### ライブラリのインストール 
-`pip install -r requirements.txt`
-### 起動  
-```
-# 通常起動
-python main.py
-# debug起動
-FLASK_DEBUG=1 python main.py
-```
+`pipenv install`
+
 ### docker-composeを用いた起動
 ```
 # まずデータベース起動
